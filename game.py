@@ -16,19 +16,19 @@ gameRunning = st.session_state.gameRunning
 
 # Game board
 def printBoard(board):
-    board_html = f"""
+    board_html = """
     <div style="display: grid; grid-template-columns: repeat(3, 100px); gap: 5px; justify-content: center;">
-        <div style="background: white; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;">{board[0]}</div>
-        <div style="background: white; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;">{board[3]}</div>
-        <div style="background: white; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;">{board[6]}</div>
-        <div style="background: white; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;">{board[1]}</div>
-        <div style="background: white; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;">{board[4]}</div>
-        <div style="background: white; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;">{board[7]}</div>
-        <div style="background: white; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;">{board[2]}</div>
-        <div style="background: white; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;">{board[5]}</div>
-        <div style="background: white; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;">{board[8]}</div>
-    </div>
     """
+    for i in range(9):
+        cell_value = board[i] if board[i] != "-" else f"{i+1}"
+        if board[i] == "X":
+            cell_style = "background-color: green; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;"
+        elif board[i] == "O":
+            cell_style = "background-color: red; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: black;"
+        else:
+            cell_style = "background-color: white; border: 2px solid black; text-align: center; line-height: 100px; font-size: 24px; color: white;"
+        board_html += f'<div style="{cell_style}">{cell_value}</div>'
+    board_html += "</div>"
     st.markdown(board_html, unsafe_allow_html=True)
 
 
@@ -135,9 +135,9 @@ printBoard(board)
 if gameRunning:
     # Convert 1-9 horizontal to vertical-wise selection
     position_mapping = {
-        1: 0, 2: 3, 3: 6,
-        4: 1, 5: 4, 6: 7,
-        7: 2, 8: 5, 9: 8
+        1: 0, 2: 1, 3: 2,
+        4: 3, 5: 4, 6: 5,
+        7: 6, 8: 7, 9: 8
     }
 
     # Display selection options horizontally
@@ -163,6 +163,11 @@ if gameRunning:
     st.session_state.currentPlayer = currentPlayer
     st.session_state.winner = winner
     st.session_state.gameRunning = gameRunning
+
+# Display user and opponent selections
+st.text(f"User selection: {currentPlayer}")
+opponent = "O" if currentPlayer == "X" else "X"
+st.text(f"Opponent selection: {opponent}")
 
 # Add a button to refresh the game
 if st.button("Restart Game", key="restart"):
